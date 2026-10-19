@@ -28,3 +28,10 @@ jobs:
           tag_name: prod
           name: Production build
           files: weather.zip
+
+      - name: Print the prod zip URL
+        run: |
+          URL="https://github.com/${{ github.repository }}/releases/download/prod/weather.zip"
+          echo "Prod zip: $URL"
+          echo "### Prod zip" >> "$GITHUB_STEP_SUMMARY"
+          echo "$URL" >> "$GITHUB_STEP_SUMMARY"
