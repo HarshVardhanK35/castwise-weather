@@ -13,8 +13,12 @@ const props = defineProps<{ conditionCode: number; isDay: boolean }>();
 <style scoped>
 .bg-icon {
   position: absolute;
-  right: -2cqw;
-  top: -4cqw;
+  /* Positive offsets (not negative) on both sides — the parent card clips
+     overflow, so a negative value here let part of the icon bleed past
+     the edge and get visibly chopped off instead of fading into the
+     background. */
+  right: 0cqw;
+  top: 0cqw;
   width: 40cqw;
   height: 40cqw;
   color: var(--accent-300);
