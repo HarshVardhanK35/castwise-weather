@@ -36,3 +36,10 @@ jobs:
           name: Staging build
           prerelease: true
           files: weather.zip
+
+      - name: Print the staging zip URL
+        run: |
+          URL="https://github.com/${{ github.repository }}/releases/download/staging/weather.zip"
+          echo "Staging zip: $URL"
+          echo "### Staging zip" >> "$GITHUB_STEP_SUMMARY"
+          echo "$URL" >> "$GITHUB_STEP_SUMMARY"
