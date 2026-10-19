@@ -164,7 +164,7 @@ onMounted(() => {
   unwatchHostConfig = watchHostConfig((config) => {
     log("received config from host", config);
     usedHostConfig = true;
-    appConfig.value = config as FullAppConfig;
+    appConfig.value = config as unknown as FullAppConfig;
     loadWeather();
   });
 
