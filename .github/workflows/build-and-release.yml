@@ -1,0 +1,38 @@
+name: Build and Release
+
+# Runs on every push to master. Builds the app (vue-tsc + vite build, output
+# already inlined into one self-contained dist/index.html via
+# vite-plugin-singlefile), zips it, and attaches that zip to a "staging"
+# GitHub Release — recreated on every push, not a new release each time, so
+# DFM's appsRegistry.json can point at one stable staging URL instead of
+# needing to be updated after every build.
+on:
+  push:
+    branches:
+      - master
+
+jobs:
+  build-and-release:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 20
+
+      - run: npm ci
+      - run: npm run build
+
+      - name: Zip the build output
+        run: cd dist && zip -r ../weather.zip . && cd ..
+
+      - name: Publish to the staging release
+        uses: softprops/action-gh-release@v2
+        with:
+          tag_name: staging
+          name: Staging build
+          prerelease: true
+          files: weather.zip

@@ -1,0 +1,30 @@
+name: Promote to Production
+
+# Fires on a version tag (e.g. v1.0.0). Copies the exact weather.zip that
+# build-and-release.yml already built and staging already tested — to a
+# "prod" GitHub Release, with no rebuild. Mirrors device-fleet-manager's
+# own promote-to-prod.yml pattern (build once, promote the same artifact).
+on:
+  push:
+    tags:
+      - "v*"
+
+jobs:
+  promote:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Download the already-built staging zip
+        run: gh release download staging -p weather.zip
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Publish to the prod release (no rebuild)
+        uses: softprops/action-gh-release@v2
+        with:
+          tag_name: prod
+          name: Production build
+          files: weather.zip
