@@ -116,11 +116,16 @@ function resetRefreshTimer() {
 }
 
 // Loads (or re-loads) the weather data for whatever's currently in
-// appConfig. The very first call fires APP_LOAD once it settles; later
-// calls (a DFM live-edit arriving, or the refresh timer) just update what's
-// on screen without doing that again.
+// appConfig. Every call fires APP_LOAD once it settles (so DFM's preview
+// spinner stops), and every RELOAD (not the first load — the preview
+// frame already defaults to its spinner until the first APP_LOAD) fires
+// APP_LOADING first, so changing a setting that forces a refetch shows
+// that same spinner again instead of sitting on stale content meanwhile.
 async function loadWeather() {
   log(hasLoadedOnce ? "config changed — reloading" : "loading for the first time");
+  if (hasLoadedOnce) {
+    window.parent?.postMessage({ type: "APP_LOADING" }, "*");
+  }
   const requestId = ++latestRequestId;
   const payload = hasLoadedOnce
     ? await updateConfig(buildIgnitionConfig())
@@ -131,16 +136,16 @@ async function loadWeather() {
   }
   applyResult(payload.data);
 
-  if (!hasLoadedOnce) {
-    hasLoadedOnce = true;
-    // Tells whatever's embedding this iframe (DFM's settings-screen preview
-    // today, the real player once deployed) that the app has actually
-    // rendered something — success or failure both count, since either way
-    // the loading spinner on the other side should stop.
-    log("posting APP_LOAD to parent");
-    window.parent?.postMessage({ type: "APP_LOAD" }, "*");
+  const firstLoad = !hasLoadedOnce;
+  hasLoadedOnce = true;
+  // Tells whatever's embedding this iframe (DFM's settings-screen preview
+  // today, the real player once deployed) that the app has actually
+  // rendered something — success or failure both count, since either way
+  // the loading spinner on the other side should stop.
+  log("posting APP_LOAD to parent");
+  window.parent?.postMessage({ type: "APP_LOAD" }, "*");
 
-    console.log(IGNITION_VERSION)
+  if (firstLoad) {
     console.info(`[WEATHER | E${IGNITION_VERSION}] bootstrap:mounted`, {
       embedded: window.parent !== window,
       hasHostConfig: usedHostConfig,
