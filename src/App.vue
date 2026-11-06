@@ -33,10 +33,8 @@ const DEFAULT_CONFIG: FullAppConfig = {
 // line came from.
 const log = (...args: unknown[]) => console.log("[WEATHER]", ...args);
 
-// Mirrors the real company's own "bootstrap:mounted" milestone log (see
-// weatherappv2/src/main.js), including their "E<engine version>" tag —
-// theirs reports the ENGINE's version (not the app's own), so this does
-// too: IGNITION_VERSION, not this app's package.json version.
+// The milestone log reports the ENGINE's version (IGNITION_VERSION), not this
+// app's own package.json version.
 let usedHostConfig = false;
 
 const appConfig = ref<FullAppConfig>(DEFAULT_CONFIG);
