@@ -49,4 +49,33 @@ defineProps<{
   font-size: 2cqw;
   color: var(--accent-200);
 }
+/* Portrait frame (phone, portrait screen): icon, temperature and condition
+   stacked in the middle, sized from the width. */
+@container (max-aspect-ratio: 1/1) {
+  .main-row {
+    flex: none;
+    flex-direction: column;
+    gap: 2cqw;
+  }
+  .condition-col {
+    display: contents;
+  }
+  .condition-icon {
+    order: 0;
+    width: 24cqw;
+    height: 24cqw;
+  }
+  .temp {
+    order: 1;
+    font-size: 38cqw;
+  }
+  .condition {
+    order: 2;
+    font-size: 7cqw;
+  }
+  .hi-lo {
+    order: 3;
+    font-size: 4.6cqw;
+  }
+}
 </style>

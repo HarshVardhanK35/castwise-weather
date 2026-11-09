@@ -10,7 +10,12 @@ defineProps<{
 
 <template>
   <div class="forecast-row">
-    <div v-for="(day, i) in forecast" :key="`${day.label}-${i}`" class="forecast-day">
+    <div
+      v-for="(day, i) in forecast"
+      :key="`${day.label}-${i}`"
+      class="forecast-day"
+      :class="{ 'is-today': day.label === 'Today' }"
+    >
       <component :is="iconFor(day.code, day.isDay)" class="forecast-icon" />
       <div class="forecast-text">
         <span class="forecast-label">{{ day.label }}</span>
@@ -61,5 +66,43 @@ defineProps<{
 .forecast-lo {
   font-size: 1.8cqw;
   opacity: 0.6;
+}
+/* Portrait frame: each day becomes a centred column (icon over text) so the
+   strip stays horizontal but readable. */
+@container (max-aspect-ratio: 1/1) {
+  .forecast-row {
+    margin-top: auto;
+    gap: 1cqw;
+    padding-top: 4cqw;
+  }
+  /* Today's high/low is already under the temperature; dropping it gives the
+     remaining days room (the 5-Day / 7-Day strips only; the hourly strip has
+     no "Today" entry). */
+  .forecast-day.is-today {
+    display: none;
+  }
+  .forecast-day {
+    flex: 1;
+    min-width: 0;
+    flex-direction: column;
+    gap: 1.6cqw;
+  }
+  .forecast-icon {
+    width: 8cqw;
+    height: 8cqw;
+  }
+  .forecast-text {
+    align-items: center;
+    text-align: center;
+  }
+  .forecast-label {
+    font-size: 3.2cqw;
+  }
+  .forecast-hi {
+    font-size: 3.8cqw;
+  }
+  .forecast-lo {
+    font-size: 3.2cqw;
+  }
 }
 </style>

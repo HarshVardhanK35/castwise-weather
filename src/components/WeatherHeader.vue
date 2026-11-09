@@ -27,4 +27,20 @@ defineProps<{
   font-size: 1.9cqw;
   color: var(--accent-200);
 }
+/* Portrait frame: centred and larger, sitting just above the icon in the
+   middle of the screen (auto margin above, fixed gap below). */
+@container (max-aspect-ratio: 1/1) {
+  .header-row {
+    align-items: center;
+    gap: 1cqw;
+    margin-top: auto;
+    margin-bottom: 9cqw;
+  }
+  .location {
+    font-size: 9cqw;
+  }
+  .time {
+    font-size: 3.8cqw;
+  }
+}
 </style>

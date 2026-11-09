@@ -25,4 +25,10 @@ const props = defineProps<{ conditionCode: number; isDay: boolean }>();
   opacity: 0.22;
   pointer-events: none;
 }
+/* Portrait frame: no background icon (the condition icon is in the middle). */
+@container (max-aspect-ratio: 1/1) {
+  .bg-icon {
+    display: none;
+  }
+}
 </style>
